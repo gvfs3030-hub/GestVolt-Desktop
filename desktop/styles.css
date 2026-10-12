@@ -70,6 +70,12 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   min-height: max-content;
   flex: 0 0 auto;
 }
+/* Center constrained content (notably the onboarding card) inside a full-width
+   block scroll viewport. align-self alone is ineffective for block parents. */
+.gv-scroll-view:not([data-horizontal="true"]) > .gv-scroll-content {
+  margin-left: auto;
+  margin-right: auto;
+}
 .gv-scroll-view[data-horizontal="true"] {
   overflow-x: auto !important;
   overflow-y: hidden !important;

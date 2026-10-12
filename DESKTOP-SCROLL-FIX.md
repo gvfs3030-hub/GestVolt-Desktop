@@ -14,3 +14,8 @@ A captura de tela da versão 1.3.3 mostrou que a área de onboarding ainda ocupa
 ## Validação
 
 Foram verificadas a sintaxe TSX e a estrutura JSON. A instalação das dependências não terminou neste ambiente, então a compilação Windows precisa ser confirmada pelo workflow do GitHub Actions.
+
+
+## Versão 1.3.5 — centralização da tela
+
+A rolagem agora também centraliza contêineres verticais com `maxWidth`. O `alignSelf: center` não era suficiente porque o elemento de conteúdo é filho de um viewport `display: block`; a correção aplica margens horizontais automáticas no DOM para posicionar o formulário no centro da janela, sem limitar a rolagem vertical.

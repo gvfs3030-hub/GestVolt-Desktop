@@ -119,6 +119,11 @@ export const ScrollView = React.forwardRef<HTMLDivElement, any>(function Desktop
           width: inner.width ?? (horizontalMode ? 'max-content' : '100%'),
           minWidth: 0,
           ...inner,
+          // When a content container has a maxWidth (for example, the onboarding
+          // form), CSS alignSelf cannot center it because the scroll viewport is
+          // a block container. Auto margins center it in the full window.
+          marginLeft: !horizontalMode && inner.maxWidth != null ? 'auto' : inner.marginLeft,
+          marginRight: !horizontalMode && inner.maxWidth != null ? 'auto' : inner.marginRight,
           // Override RN content styles so content never shrinks to the viewport.
           width: horizontalMode ? 'max-content' : (inner.width ?? '100%'),
           flexGrow: 0,
