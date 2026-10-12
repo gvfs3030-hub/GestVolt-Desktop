@@ -25,7 +25,7 @@ Os executáveis ficam em `release/` (instalador NSIS e versão portátil).
 2. Abra a aba **Actions**.
 3. Execute **Build GestVolt Desktop for Windows** com **Run workflow**, ou faça push para `main`.
 4. Quando terminar, abra a execução e baixe o artefato **GestVolt-Windows-Desktop** na seção **Artifacts**.
-5. Extraia o ZIP do artefato. Dentro dele estarão o instalador `GestVolt-...-Setup.exe` e o executável portátil `GestVolt-Portable-1.3.0.exe` (o nome exato pode variar conforme electron-builder).
+5. Extraia o ZIP do artefato. Dentro dele estarão o instalador `GestVolt-...-Setup.exe` e o executável portátil `GestVolt-Portable-1.3.1.exe` (o nome exato pode variar conforme electron-builder).
 
 ## Armazenamento e privacidade
 - O banco de dados fica no perfil local do Windows do usuário, na pasta `AppData` da aplicação. A versão desktop usa um motor SQLite local empacotado e não compartilha automaticamente o arquivo de banco com Android.
@@ -44,3 +44,21 @@ Os executáveis ficam em `release/` (instalador NSIS e versão portátil).
 
 ## Observações
 O app é local/offline em tempo de execução, mas `npm install` e o workflow precisam de internet para baixar dependências de build. O pacote Windows ainda precisa ser validado no computador de destino, incluindo importação e restauração de backups.
+
+
+## Correção de dependências (1.3.1)
+
+A versão 1.3.1 fixa `@types/react-dom` em `19.2.3` para manter compatibilidade com `@types/react` 19.2.x e evitar o conflito ERESOLVE causado pela resolução automática de `@types/react-dom` 19.3.0.
+
+
+## Correção 1.3.2 — cadastro inicial no desktop
+- O formulário de primeiro acesso agora usa um contêiner de altura limitada e rolagem vertical explícita no Electron.
+- A janela Electron precisa permanecer em tela cheia/normal sem esconder o final do formulário; todos os campos e o botão de conclusão ficam acessíveis rolando até o final.
+- Foi incluída uma orientação visual para indicar que há outras seções abaixo.
+
+
+## Versão 1.3.2 — correção de rolagem do primeiro acesso
+- A tela de onboarding agora possui um contêiner de altura definida e rolagem vertical explícita no Electron.
+- Todos os campos, opções, saldo inicial e botão de conclusão permanecem acessíveis em janelas menores, usando a roda do mouse ou a barra de rolagem.
+- Um aviso visual informa que há seções adicionais abaixo do cabeçalho.
+- O restante da navegação, persistência local e workflow de build foi mantido.
