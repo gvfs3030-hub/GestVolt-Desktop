@@ -51,14 +51,26 @@ O app é local/offline em tempo de execução, mas `npm install` e o workflow pr
 A versão 1.3.1 fixa `@types/react-dom` em `19.2.3` para manter compatibilidade com `@types/react` 19.2.x e evitar o conflito ERESOLVE causado pela resolução automática de `@types/react-dom` 19.3.0.
 
 
-## Correção 1.3.2 — cadastro inicial no desktop
+## Correção 1.3.3 — cadastro inicial no desktop
 - O formulário de primeiro acesso agora usa um contêiner de altura limitada e rolagem vertical explícita no Electron.
 - A janela Electron precisa permanecer em tela cheia/normal sem esconder o final do formulário; todos os campos e o botão de conclusão ficam acessíveis rolando até o final.
 - Foi incluída uma orientação visual para indicar que há outras seções abaixo.
 
 
-## Versão 1.3.2 — correção de rolagem do primeiro acesso
+## Versão 1.3.3 — correção de rolagem do primeiro acesso
 - A tela de onboarding agora possui um contêiner de altura definida e rolagem vertical explícita no Electron.
 - Todos os campos, opções, saldo inicial e botão de conclusão permanecem acessíveis em janelas menores, usando a roda do mouse ou a barra de rolagem.
 - Um aviso visual informa que há seções adicionais abaixo do cabeçalho.
 - O restante da navegação, persistência local e workflow de build foi mantido.
+
+
+## Versão 1.3.3 — correção da rolagem no desktop
+
+A versão 1.3.2 ainda dependia dos estilos de `ScrollView` do React Native Web. As propriedades `overflowY`/`overflowX` podem não ser aplicadas como esperado pelo resolvedor de estilos da biblioteca. Nesta versão, o shim desktop fornece um contêiner DOM com `overflow-y: auto` real e mantém o conteúdo interno renderizado por `react-native-web`. Isso corrige a rolagem vertical do onboarding e também das páginas longas, relatórios e formulários. O app Android continua usando o `ScrollView` nativo, sem alterações no aplicativo móvel.
+
+### Teste após a build
+
+1. Abra o GestVolt Desktop numa janela normal.
+2. Na tela de boas-vindas, role com a roda do mouse/trackpad dentro do formulário ou use a barra de rolagem à direita.
+3. Confirme que é possível acessar o nome, o perfil, os objetivos, a conta inicial, o saldo e o botão de concluir.
+4. Após o cadastro, abra Relatórios e confirme que páginas compridas também rolam.

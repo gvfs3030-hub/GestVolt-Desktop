@@ -1,8 +1,8 @@
 {
   "name": "gestvolt-desktop",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "private": true,
-  "description": "GestVolt Desktop - gestao financeira local e offline",
+  "description": "GestVolt Desktop - rolagem vertical funcional no Electron, gestão financeira local e offline",
   "main": "electron/main.cjs",
   "author": "GestVolt",
   "license": "UNLICENSED",
