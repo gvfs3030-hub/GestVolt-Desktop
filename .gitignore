@@ -1,0 +1,17 @@
+
+node_modules/
+dist/
+release/
+.cache/
+.vite/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.sqlite
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
