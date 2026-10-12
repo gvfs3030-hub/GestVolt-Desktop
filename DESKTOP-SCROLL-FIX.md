@@ -1,15 +1,16 @@
-# Correção da rolagem no GestVolt Desktop 1.3.3
+# GestVolt Desktop — correção robusta de rolagem 1.3.4
 
-## Causa
-A tela de onboarding já utilizava um componente `ScrollView`, mas a implementação no desktop dependia do tratamento de `overflowY` pelo resolvedor de estilos do React Native Web. Nessa configuração, o CSS de rolagem não se aplicava de forma confiável e o `body`/`#root` continuam intencionalmente com `overflow: hidden` para evitar duas barras de rolagem concorrentes.
+A captura de tela da versão 1.3.3 mostrou que a área de onboarding ainda ocupava apenas parte da largura e que o conteúdo inferior continuava inacessível. Esta revisão altera a geometria dos contêineres, não só a aparência do scrollbar.
 
-## Correção
-- O shim desktop agora exporta uma implementação DOM para `ScrollView`.
-- O contêiner externo recebe `overflow-y: auto` / `overflow-x: hidden` diretamente como estilos CSS do navegador.
-- O conteúdo interno permanece em `react-native-web.View`, preservando os estilos RN do conteúdo.
-- O CSS define `min-height: 0`, `min-width: 0` e `overscroll-behavior: contain`.
-- As páginas de onboarding, área principal, relatórios e formulários usam o mesmo shim.
-- O alias é somente do build desktop no Vite; o app Android continua usando o `ScrollView` nativo.
+## Alterações
+
+- `#root` e o wrapper DOM do `SafeAreaProvider` agora ocupam toda a janela Electron e são colunas flexíveis.
+- O `ScrollView` do desktop é um elemento DOM com uma caixa de rolagem real e dimensões definidas pelo contêiner.
+- O conteúdo interno é um contêiner flex de altura intrínseca (`max-content`) e `flex-shrink: 0`, para que não seja comprimido até caber na altura visível.
+- O onboarding usa uma área de rolagem que preenche a janela e mantém seu cartão centralizado em relação à largura total.
+- A rolagem funciona com roda do mouse, barra de rolagem e teclas Page Down/End quando o contêiner está focado.
+- A mudança é exclusiva do alias desktop; o app Android continua com o ScrollView nativo do React Native.
 
 ## Validação
-A sintaxe dos arquivos TSX e a estrutura dos arquivos de configuração foram validadas. A build Electron/Windows precisa ser executada pelo workflow no GitHub para validar dependências e empacotamento em ambiente Windows.
+
+Foram verificadas a sintaxe TSX e a estrutura JSON. A instalação das dependências não terminou neste ambiente, então a compilação Windows precisa ser confirmada pelo workflow do GitHub Actions.

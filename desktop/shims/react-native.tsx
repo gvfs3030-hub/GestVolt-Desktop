@@ -54,11 +54,12 @@ export const Keyboard = {
 
 export function StatusBar(_props: any) { return null; }
 
-// Explicit DOM-backed ScrollView for Electron desktop. React Native Web accepts
-// the CSS `overflow` property, but platform-specific `overflowY` can be dropped
-// by its style resolver. That made tall onboarding/forms impossible to scroll.
-// This shim is used only by the desktop Vite build; the Android app continues
-// to use the native React Native ScrollView.
+// Explicit DOM-backed ScrollView for Electron desktop.
+// IMPORTANT: the outer element has a definite viewport-sized scroll box, while
+// the inner content is allowed to grow to its intrinsic height. Do not use a
+// flex-growing/shrinking RN View as the scroll content: in Electron this can
+// shrink the content to the viewport, which hides the lower onboarding fields
+// and makes the page impossible to scroll.
 const flattenDesktopStyle = (style: any): Record<string, any> =>
   (RNW.StyleSheet.flatten(style) || {}) as Record<string, any>;
 
@@ -74,6 +75,7 @@ export const ScrollView = React.forwardRef<HTMLDivElement, any>(function Desktop
     ...domProps
   } = props;
   const outer = flattenDesktopStyle(style);
+  const inner = flattenDesktopStyle(contentContainerStyle);
   const horizontalMode = !!horizontal;
 
   return (
@@ -85,28 +87,49 @@ export const ScrollView = React.forwardRef<HTMLDivElement, any>(function Desktop
       data-horizontal={horizontalMode ? 'true' : 'false'}
       aria-label={accessibilityLabel}
       role={accessibilityRole}
+      tabIndex={0}
       className={`gv-scroll-view${className ? ` ${className}` : ''}`}
       style={{
         boxSizing: 'border-box',
+        display: 'block',
+        position: outer.position ?? 'relative',
+        width: outer.width ?? '100%',
         minWidth: 0,
         minHeight: 0,
-        flex: 1,
+        // Keep normal flex sizing for content pages; onboarding overrides this
+        // with a definite viewport-height box via its own style.
+        flex: outer.flex ?? '1 1 auto',
+        alignSelf: outer.alignSelf ?? 'stretch',
         ...outer,
-        // Always override RN-specific overflow fields with real DOM CSS.
+        // Force actual DOM scroll behavior after React Native Web styles.
         overflowY: horizontalMode ? 'hidden' : 'auto',
         overflowX: horizontalMode ? 'auto' : 'hidden',
         overscrollBehavior: 'contain',
         scrollbarWidth: 'thin',
+        WebkitOverflowScrolling: 'touch',
       } as React.CSSProperties}
     >
-      <RNW.View
-        style={[
-          { flexGrow: 1, minWidth: 0, flexDirection: horizontalMode ? 'row' : 'column' },
-          contentContainerStyle,
-        ]}
+      <div
+        className="gv-scroll-content"
+        style={{
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: horizontalMode ? 'row' : 'column',
+          alignItems: 'stretch',
+          width: inner.width ?? (horizontalMode ? 'max-content' : '100%'),
+          minWidth: 0,
+          ...inner,
+          // Override RN content styles so content never shrinks to the viewport.
+          width: horizontalMode ? 'max-content' : (inner.width ?? '100%'),
+          flexGrow: 0,
+          flexShrink: 0,
+          height: 'max-content',
+          minHeight: 'max-content',
+          boxSizing: 'border-box',
+        } as React.CSSProperties}
       >
         {children}
-      </RNW.View>
+      </div>
     </div>
   );
 });
