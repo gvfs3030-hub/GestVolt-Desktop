@@ -1,0 +1,1 @@
+GestVolt Desktop — recursos locais. Nenhuma API remota é necessária para o funcionamento.
